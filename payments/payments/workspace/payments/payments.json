@@ -1,0 +1,133 @@
+{
+ "app": "payments",
+ "charts": [],
+ "content": "[{\"id\":\"card_gateways\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment Gateways\",\"col\":6}},{\"id\":\"card_settings\",\"type\":\"card\",\"data\":{\"card_name\":\"Gateway Settings\",\"col\":6}}]",
+ "creation": "2026-08-11 20:30:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "credit-card",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Payments",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Gateways",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Gateway",
+   "link_count": 0,
+   "link_to": "Payment Gateway",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Gateway Settings",
+   "link_count": 6,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stripe Settings",
+   "link_count": 0,
+   "link_to": "Stripe Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "PayPal Settings",
+   "link_count": 0,
+   "link_to": "PayPal Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Razorpay Settings",
+   "link_count": 0,
+   "link_to": "Razorpay Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Braintree Settings",
+   "link_count": 0,
+   "link_to": "Braintree Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Mpesa Settings",
+   "link_count": 0,
+   "link_to": "Mpesa Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Chapa Settings",
+   "link_count": 0,
+   "link_to": "Chapa Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-11 20:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payments",
+ "name": "Payments",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Payment Gateway",
+   "link_to": "Payment Gateway",
+   "type": "DocType"
+  }
+ ],
+ "title": "Payments",
+ "type": "Workspace"
+}

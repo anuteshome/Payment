@@ -7,6 +7,17 @@ app_description = "Payments app for frappe"
 app_email = "hello@frappe.io"
 app_license = "MIT"
 
+add_to_apps_screen = [
+	{
+		"name": "payments",
+		"logo": "/assets/frappe/images/frappe-framework-logo.svg",
+		"title": "Payments",
+		"route": "/app/payments",
+		"has_permission": "frappe.permissions.check_app_permission",
+	}
+]
+
+
 # Includes in <head>
 # ------------------
 
