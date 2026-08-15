@@ -81,7 +81,7 @@ class ChapaSettings(Document):
             "Content-Type": "application/json",
         }
 
-        tx_ref = f"{self.data.reference_docname}-{uuid.uuid4().hex[:10]}"
+        tx_ref = f"{self.data.payment}-{uuid.uuid4().hex[:10]}"
 
                 
 
@@ -100,6 +100,8 @@ class ChapaSettings(Document):
         description = self.data.get("description") or "i love you to pay"
         description = re.sub(r"[^A-Za-z0-9_. -]", "", description)
         description = description[:49]
+
+
 
         payload = {
             "amount": str(self.data.amount),
@@ -130,6 +132,7 @@ class ChapaSettings(Document):
             },
         }
 
+
         try:
             response = requests.post(
                 url,
@@ -137,6 +140,7 @@ class ChapaSettings(Document):
                 headers=headers,
                 timeout=30,
             )
+
 
             print("STATUS:", response.status_code)
             print("BODY:", response.text)
@@ -161,7 +165,7 @@ class ChapaSettings(Document):
     # -----------------------------
 @frappe.whitelist(allow_guest=True)
 def verify_payment():
-    tx_ref = frappe.form_dict.get("tx_ref")
+    tx_ref = frappe.form_dict.get("trx_ref")
 
     if not tx_ref:
         frappe.throw(_("Missing tx_ref"))
@@ -180,11 +184,16 @@ def verify_payment():
 
     r.raise_for_status()
     result = r.json()
+    payment_data = result.get("data") or {}
 
-    if result.get("status") != "success":
+    if (
+        result.get("status") != "success"
+        or payment_data.get("status") != "success"
+    ):
         frappe.throw(_("Payment verification failed"))
 
-    payment_data = result.get("data", {})
+    if payment_data.get("tx_ref") != tx_ref:
+        frappe.throw(_("Payment reference mismatch"))
 
     # Extract LMS Payment document name
     payment_name = tx_ref.rsplit("-", 1)[0]
@@ -194,7 +203,7 @@ def verify_payment():
 
         if not payment.payment_received:
             payment.payment_received = 1
-            payment.payment_id = payment_data.get("id")
+            payment.payment_id = payment_data.get("reference")
             payment.save(ignore_permissions=True)
             frappe.db.commit()
 
