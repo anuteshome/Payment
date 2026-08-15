@@ -21,11 +21,11 @@ class ChapaSettings(Document):
     # REGISTER GATEWAY
     # -----------------------------
     def on_update(self):
-        create_payment_gateway(
-            "Chapa",
-            settings=self.name,
-            controller=self.name,
-        )
+        # Chapa Settings is a Single DocType, so it cannot be the target of the
+        # Payment Gateway's Dynamic Link field. With no controller stored on the
+        # gateway, get_payment_gateway_controller() loads "Chapa Settings"
+        # directly, as it does for the other single-settings gateways.
+        create_payment_gateway("Chapa")
 
         self.validate_credentials()
 
