@@ -3,6 +3,8 @@
 
 import uuid
 import re
+from decimal import Decimal, InvalidOperation
+
 import requests
 import frappe
 from frappe import _
@@ -158,14 +160,17 @@ class ChapaSettings(Document):
             frappe.throw(response.text)
 
         except Exception:
-            frappe.throw(frappe.get_traceback())
+            frappe.throw(frappe.get_traceback()) # is this exception print secret_key ? i will check it
 
     # -----------------------------
     # VERIFY PAYMENT (WEBHOOK)
     # -----------------------------
 @frappe.whitelist(allow_guest=True)
 def verify_payment():
-    tx_ref = frappe.form_dict.get("trx_ref")
+    tx_ref = (
+        frappe.form_dict.get("trx_ref")
+        or frappe.form_dict.get("tx_ref")
+    )
 
     if not tx_ref:
         frappe.throw(_("Missing tx_ref"))
@@ -198,14 +203,32 @@ def verify_payment():
     # Extract LMS Payment document name
     payment_name = tx_ref.rsplit("-", 1)[0]
 
-    if frappe.db.exists("LMS Payment", payment_name):
-        payment = frappe.get_doc("LMS Payment", payment_name)
+    if not frappe.db.exists("LMS Payment", payment_name):
+        frappe.throw(_("LMS Payment not found"))
 
-        if not payment.payment_received:
-            payment.payment_received = 1
-            payment.payment_id = payment_data.get("reference")
-            payment.save(ignore_permissions=True)
-            frappe.db.commit()
+    payment = frappe.get_doc("LMS Payment", payment_name)
+
+    try:
+        paid_amount = Decimal(str(payment_data.get("amount")))
+        expected_amount = Decimal(str(payment.amount_with_gst or payment.amount))
+    except (InvalidOperation, TypeError, ValueError):
+        frappe.throw(_("Invalid payment amount returned by Chapa"))
+
+    if paid_amount != expected_amount or payment_data.get("currency") != payment.currency:
+        frappe.throw(_("Payment amount or currency mismatch"))
+
+    if not payment.payment_received:
+        from lms.lms.utils import complete_enrollment
+
+        payment.payment_received = 1
+        payment.payment_id = payment_data.get("reference")
+        payment.save(ignore_permissions=True)
+        complete_enrollment(
+            payment.name,
+            payment.payment_for_document_type,
+            payment.payment_for_document,
+        )
+        frappe.db.commit()
 
     return {
         "status": "success",
